@@ -1,2 +1,4 @@
 stacked-vampire/examples/*
 stacked-vampire/model_logs/*
+augmented_dataset/*
+baseline_predictions_dar/*
