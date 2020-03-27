@@ -1,0 +1,36 @@
+# this script trains the baselines on five sites and tests on the given input testing csv
+# please make sure to check the following before running the script
+    # input training data (should look like ...out-domain.csv)
+    # input testing data (should be one of out-domain.csv, train.csv, test.csv)
+    # output file location (check that you have created the appropriate folder)
+
+library(rJava)
+library(openVA)
+library('nbc4va')
+
+train <- read.csv("out-domain.csv")
+test <- read.csv("test.csv")
+tariff2 <- codeVA(data = test, data.type = "PHMRC", model = "Tariff",
+                  data.train = train, causes.train = "gs_text34",
+                  phmrc.type = "adult")
+interva2 <- codeVA(data = test, data.type = "PHMRC", model = "InterVA",
+                   data.train = train, causes.train = "gs_text34",
+                   phmrc.type = "adult")
+nbc2 <- codeVA(data = test, data.type = "PHMRC", model = "NBC",
+                   data.train = train, causes.train = "gs_text34",
+                   phmrc.type = "adult")
+insilico2 <- codeVA(data = test, data.type = "PHMRC", model = "InSilicoVA",
+                    data.train = train, causes.train = "gs_text34",
+                    phmrc.type = "adult",
+                    jump.scale = 0.05, convert.type = "fixed",
+                    Nsim=10000, auto.length = FALSE)
+
+cod.tariff2 <- getTopCOD(tariff2)
+cod.interva2 <- getTopCOD(interva2)
+cod.nbc2 <- getTopCOD(nbc2)
+cod.insilico2 <- getTopCOD(insilico2)
+
+write.table(cod.tariff2,"tariff2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.interva2,"baseline-representations/train/interva2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.nbc2,"nbc2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.insilico2,"baseline-representations/train/insilico2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
