@@ -1,0 +1,73 @@
+# a script to create the baseline predictions on the dar data
+# each classifier is trained on all the data we have labels for (out-domain)
+# (minus the tiny bit of dar that we're using to evaluate)
+# we evaluate on the testing dar (predictions are used for evaluation time)
+# and the training dar (predictions are combined with other data to create pretraining data for VAMPIRE later on)
+
+library(rJava)
+library(openVA)
+library('nbc4va')
+
+###############################################################################
+######################## EVALUATING ON TRAINING DAR ###########################
+###############################################################################
+
+train <- read.csv("baseline_predictions_dar/out-domain.csv")
+test <- read.csv("baseline_predictions_dar/train.csv")
+
+tariff2 <- codeVA(data = test, data.type = "PHMRC", model = "Tariff",
+                  data.train = train, causes.train = "gs_text34",
+                  phmrc.type = "adult")
+interva2 <- codeVA(data = test, data.type = "PHMRC", model = "InterVA",
+                   data.train = train, causes.train = "gs_text34",
+                   phmrc.type = "adult")
+nbc2 <- codeVA(data = test, data.type = "PHMRC", model = "NBC",
+                   data.train = train, causes.train = "gs_text34",
+                   phmrc.type = "adult")
+insilico2 <- codeVA(data = test, data.type = "PHMRC", model = "InSilicoVA",
+                    data.train = train, causes.train = "gs_text34",
+                    phmrc.type = "adult",
+                    jump.scale = 0.05, convert.type = "fixed",
+                    Nsim=10000, auto.length = FALSE)
+
+cod.tariff2 <- getTopCOD(tariff2)
+cod.interva2 <- getTopCOD(interva2)
+cod.nbc2 <- getTopCOD(nbc2)
+cod.insilico2 <- getTopCOD(insilico2)
+
+write.table(cod.tariff2,"baseline_predictions_dar/training_dar/tariff2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.interva2,"baseline_predictions_dar/training_dar/interva2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.nbc2,"baseline_predictions_dar/training_dar/nbc2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.insilico2,"baseline_predictions_dar/training_dar/insilico2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+
+###############################################################################
+######################## EVALUATING ON TRAINING DAR ###########################
+###############################################################################
+
+train <- read.csv("baseline_predictions_dar/out-domain.csv")
+test <- read.csv("baseline_predictions_dar/test.csv")
+
+tariff2 <- codeVA(data = test, data.type = "PHMRC", model = "Tariff",
+                  data.train = train, causes.train = "gs_text34",
+                  phmrc.type = "adult")
+interva2 <- codeVA(data = test, data.type = "PHMRC", model = "InterVA",
+                   data.train = train, causes.train = "gs_text34",
+                   phmrc.type = "adult")
+nbc2 <- codeVA(data = test, data.type = "PHMRC", model = "NBC",
+                   data.train = train, causes.train = "gs_text34",
+                   phmrc.type = "adult")
+insilico2 <- codeVA(data = test, data.type = "PHMRC", model = "InSilicoVA",
+                    data.train = train, causes.train = "gs_text34",
+                    phmrc.type = "adult",
+                    jump.scale = 0.05, convert.type = "fixed",
+                    Nsim=10000, auto.length = FALSE)
+
+cod.tariff2 <- getTopCOD(tariff2)
+cod.interva2 <- getTopCOD(interva2)
+cod.nbc2 <- getTopCOD(nbc2)
+cod.insilico2 <- getTopCOD(insilico2)
+
+write.table(cod.tariff2,"baseline_predictions_dar/testing_dar/tariff2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.interva2,"baseline_predictions_dar/testing_dar/interva2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.nbc2,"baseline_predictions_dar/testing_dar/nbc2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.insilico2,"baseline_predictions_dar/testing_dar/insilico2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
