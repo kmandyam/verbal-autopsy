@@ -1,0 +1,10 @@
+allennlp==0.9.0
+pandas
+pytest
+tabulate
+regex
+# Checks style, syntax, and other useful errors.
+pylint==1.8.1
+# Static type checking
+mypy==0.521
+scipy>=1.3.0
