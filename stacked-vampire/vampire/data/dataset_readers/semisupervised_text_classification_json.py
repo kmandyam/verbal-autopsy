@@ -12,7 +12,7 @@ from allennlp.data.token_indexers import SingleIdTokenIndexer, TokenIndexer
 from allennlp.data.tokenizers import Tokenizer, WordTokenizer
 from allennlp.data.tokenizers.sentence_splitter import SpacySentenceSplitter
 from allennlp.data.instance import Instance
-from allennlp.data.fields import LabelField, TextField, Field
+from allennlp.data.fields import LabelField, TextField, Field, ArrayField
 
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
@@ -83,6 +83,9 @@ class SemiSupervisedTextClassificationJsonReader(TextClassificationJsonReader):
         if self._segment_sentences:
             self._sentence_segmenter = SpacySentenceSplitter()
 
+        self.label_order = ['External', 'Cardio', 'Cancer', 'Stroke', 'TB/AIDS', 'Other NCD',
+                            'Other Comm', 'Pneumonia', 'Renal', 'Maternal', 'Diabetes', 'Liver']
+
     @staticmethod
     def _reservoir_sampling(file_: TextIOWrapper, sample: int):
         """
@@ -133,16 +136,28 @@ class SemiSupervisedTextClassificationJsonReader(TextClassificationJsonReader):
             for line in data_file:
                 items = json.loads(line)
                 text = items["text"] + ' ' + items["metadata_text"]
+                baseline_rep = self.read_baselines(items)
                 if self._ignore_labels:
-                    instance = self.text_to_instance(text=text, label=None)
+                    instance = self.text_to_instance(text=text, covariate=baseline_rep, label=None)
                 else:
                     label = str(items.get('label'))
-                    instance = self.text_to_instance(text=text, label=label)
+                    instance = self.text_to_instance(text=text, covariate=baseline_rep, label=label)
                 if instance is not None and instance.fields['tokens'].tokens:
                     yield instance
 
+    def read_baselines(self, items):
+        baselines = ['tariff', 'interva', 'nbc', 'insilico']
+        rep = []
+        for b in baselines:
+            b_rep = [0] * len(self.label_order)
+            if items[b] != 'Undetermined':
+                label_index = self.label_order.index(items[b])
+                b_rep[label_index] += 1
+            rep.append(b_rep)
+        return np.array(rep)
+
     @overrides
-    def text_to_instance(self, text: str, label: str = None) -> Instance:  # type: ignore
+    def text_to_instance(self, text: str, covariate: str = None, label: str = None) -> Instance:  # type: ignore
         """
         Parameters
         ----------
@@ -165,6 +180,7 @@ class SemiSupervisedTextClassificationJsonReader(TextClassificationJsonReader):
         if self._max_sequence_length is not None:
             tokens = self._truncate(tokens)
         fields['tokens'] = TextField(tokens, self._token_indexers)
+        fields['covariates'] = ArrayField(covariate)
         if label is not None:
             fields['label'] = LabelField(label,
                                          skip_indexing=self._skip_label_indexing)

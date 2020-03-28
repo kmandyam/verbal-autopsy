@@ -57,13 +57,16 @@ class Classifier(Model):
                                                      self._num_labels)
         self._accuracy = CategoricalAccuracy()
         self.label_f1_metrics = {}
+        self.label_order = []
         for i in range(self._num_labels):
             self.label_f1_metrics[vocab.get_token_from_index(index=i, namespace="labels")] = F1Measure(positive_label=i)
+            self.label_order.append(vocab.get_token_from_index(index=i, namespace="labels"))
         self._loss = torch.nn.CrossEntropyLoss()
         initializer(self)
 
     def forward(self,  # type: ignore
                 tokens: Dict[str, torch.LongTensor],
+                covariates: torch.LongTensor,
                 label: torch.IntTensor = None) -> Dict[str, torch.Tensor]:
         # pylint: disable=arguments-differ
         """
