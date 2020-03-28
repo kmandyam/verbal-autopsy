@@ -351,6 +351,7 @@ class VAMPIRE(Model):
 
         npmi_data = ((np.log10(self.n_docs) + self._npmi_numerator[rows, cols])
                      / (np.log10(self.n_docs) - self._npmi_denominator[rows, cols]))
+        npmi_data = np.nan_to_num(npmi_data)
         npmi_data[npmi_data == 1.0] = 0.0
         npmi_shape = (len(topics), len(list(combinations(range(max_seq_len), 2))))
         npmi = sparse.csr_matrix((npmi_data.tolist()[0], (res_rows, res_cols)), shape=npmi_shape)

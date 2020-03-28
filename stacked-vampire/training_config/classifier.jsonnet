@@ -267,7 +267,7 @@ local BASE_READER(TOKEN_INDEXERS, THROTTLE, USE_SPACY_TOKENIZER, USE_LAZY_DATASE
    "random_seed": std.extVar("SEED"),
    "dataset_reader": BASE_READER(TOKEN_INDEXERS, THROTTLE, USE_SPACY_TOKENIZER, USE_LAZY_DATASET_READER),
    "validation_dataset_reader": BASE_READER(TOKEN_INDEXERS, null, USE_SPACY_TOKENIZER, USE_LAZY_DATASET_READER),
-   "datasets_for_vocab_creation": ["train"],
+   "datasets_for_vocab_creation": ["train", "validation"],
    "train_data_path": TRAIN_PATH,
    "validation_data_path": DEV_PATH,
    "test_data_path": if EVALUATE_ON_TEST then TEST_PATH else null,
@@ -292,7 +292,7 @@ local BASE_READER(TOKEN_INDEXERS, THROTTLE, USE_SPACY_TOKENIZER, USE_LAZY_DATASE
          "lr": LEARNING_RATE,
          "type": "adam"
       },
-      "patience": 5,
+      "patience": 15,
       "num_serialized_models_to_keep": 1,
       "validation_metric": "+accuracy"
    }

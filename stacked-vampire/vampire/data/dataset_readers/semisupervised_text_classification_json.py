@@ -132,7 +132,7 @@ class SemiSupervisedTextClassificationJsonReader(TextClassificationJsonReader):
                 data_file = self._reservoir_sampling(data_file, self._sample)
             for line in data_file:
                 items = json.loads(line)
-                text = items["text"]
+                text = items["text"] + ' ' + items["metadata_text"]
                 if self._ignore_labels:
                     instance = self.text_to_instance(text=text, label=None)
                 else:

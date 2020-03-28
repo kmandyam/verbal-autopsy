@@ -31,12 +31,12 @@ def load_data(data_path: str, tokenize: bool = False, tokenizer_type: str = "jus
                 example = {"text": line}
             if tokenize:
                 if tokenizer_type == 'just_spaces':
-                    tokens = list(map(str, tokenizer.split_words(example['text'])))
+                    tokens = list(map(str, tokenizer.split_words(example['text'] + ' ' + example['metadata_text'])))
                 elif tokenizer_type == 'spacy':
-                    tokens = list(map(str, tokenizer(example['text'])))
+                    tokens = list(map(str, tokenizer(example['text'] + ' ' + example['metadata_text'])))
                 text = ' '.join(tokens)
             else:
-                text = example['text']
+                text = example['text'] + ' ' + example['metadata_text']
             tokenized_examples.append(text)
     return tokenized_examples
 
@@ -75,7 +75,7 @@ def main():
 
     print("fitting count vectorizer...")
 
-    count_vectorizer = CountVectorizer(stop_words='english', max_features=args.vocab_size, token_pattern=r'\b[^\d\W]{3,30}\b')
+    count_vectorizer = CountVectorizer(stop_words='english', max_features=args.vocab_size, token_pattern=r'\b\w+|:|\.|\[|\]\b')
     
     text = tokenized_train_examples + tokenized_dev_examples
     
@@ -84,7 +84,7 @@ def main():
     vectorized_train_examples = count_vectorizer.transform(tqdm(tokenized_train_examples))
     vectorized_dev_examples = count_vectorizer.transform(tqdm(tokenized_dev_examples))
 
-    reference_vectorizer = CountVectorizer(stop_words='english', token_pattern=r'\b[^\d\W]{3,30}\b')
+    reference_vectorizer = CountVectorizer(stop_words='english', token_pattern=r'\b\w+|:|\.|\[|\]\b')
     if not args.reference_corpus_path:
         print("fitting reference corpus using development data...")
         reference_matrix = reference_vectorizer.fit_transform(tqdm(tokenized_dev_examples))

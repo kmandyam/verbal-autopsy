@@ -6,7 +6,7 @@ from allennlp.models.model import Model
 from allennlp.modules import TextFieldEmbedder
 from allennlp.nn import InitializerApplicator
 from allennlp.nn.util import get_text_field_mask
-from allennlp.training.metrics import CategoricalAccuracy
+from allennlp.training.metrics import CategoricalAccuracy, F1Measure
 
 from vampire.modules.encoder import Encoder
 
@@ -56,6 +56,9 @@ class Classifier(Model):
         self._classification_layer = torch.nn.Linear(self._clf_input_dim,
                                                      self._num_labels)
         self._accuracy = CategoricalAccuracy()
+        self.label_f1_metrics = {}
+        for i in range(self._num_labels):
+            self.label_f1_metrics[vocab.get_token_from_index(index=i, namespace="labels")] = F1Measure(positive_label=i)
         self._loss = torch.nn.CrossEntropyLoss()
         initializer(self)
 
@@ -101,10 +104,29 @@ class Classifier(Model):
         if label is not None:
             loss = self._loss(logits, label.long().view(-1))
             output_dict["loss"] = loss
+
+            # compute F1 per label
+            for i in range(self._num_labels):
+                metric = self.label_f1_metrics[self.vocab.get_token_from_index(index=i, namespace="labels")]
+                metric(probs, label)
+
             self._accuracy(logits, label)
 
         return output_dict
 
     def get_metrics(self, reset: bool = False) -> Dict[str, float]:
-        metrics = {'accuracy': self._accuracy.get_metric(reset)}
-        return metrics
+        metric_dict = {}
+        sum_f1 = 0.0
+        for name, metric in self.label_f1_metrics.items():
+            metric_val = metric.get_metric(reset)
+            metric_dict[name + '_P'] = metric_val[0]
+            metric_dict[name + '_R'] = metric_val[1]
+            metric_dict[name + '_F1'] = metric_val[2]
+            sum_f1 += metric_val[2]
+
+        names = list(self.label_f1_metrics.keys())
+        total_len = len(names)
+        average_f1 = sum_f1 / total_len
+        metric_dict['average_F1'] = average_f1
+        metric_dict['accuracy'] = self._accuracy.get_metric(reset)
+        return metric_dict
