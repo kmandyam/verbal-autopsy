@@ -55,6 +55,7 @@ class Classifier(Model):
             self._clf_input_dim = self._input_embedder.get_output_dim()
         self._classification_layer = torch.nn.Linear(self._clf_input_dim,
                                                      self._num_labels)
+        self._covariate_projection = torch.nn.Linear(4, 1)
         self._accuracy = CategoricalAccuracy()
         self.label_f1_metrics = {}
         self.label_order = []
@@ -100,6 +101,11 @@ class Classifier(Model):
             embedded_text = self._dropout(embedded_text)
 
         logits = self._classification_layer(embedded_text)
+
+        # include a projection of the covariates to the logits
+        projected_covariates = self._covariate_projection(covariates.transpose(1, 2))
+        logits = logits + projected_covariates.squeeze(dim=2)
+
         probs = torch.nn.functional.softmax(logits, dim=-1)
 
         output_dict = {"logits": logits, "probs": probs}

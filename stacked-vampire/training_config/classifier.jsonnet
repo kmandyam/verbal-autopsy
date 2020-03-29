@@ -292,7 +292,7 @@ local BASE_READER(TOKEN_INDEXERS, THROTTLE, USE_SPACY_TOKENIZER, USE_LAZY_DATASE
          "lr": LEARNING_RATE,
          "type": "adam"
       },
-      "patience": 15,
+      "patience": 25,
       "num_serialized_models_to_keep": 1,
       "validation_metric": "+accuracy"
    }
