@@ -7,7 +7,7 @@ CLASSIFIER = {
         "LAZY_DATASET_READER": 0,
         "CUDA_DEVICE": 0,
         "EVALUATE_ON_TEST": 0,
-        "NUM_EPOCHS": 60,
+        "NUM_EPOCHS": 80,
         "SEED": RandomSearch.random_integer(0, 10000),
         "SEQUENCE_LENGTH": 400,
         "TRAIN_PATH": os.environ["DATA_DIR"] + "/train.jsonl",
