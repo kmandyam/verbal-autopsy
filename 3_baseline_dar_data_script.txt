@@ -12,8 +12,8 @@ library('nbc4va')
 ######################## EVALUATING ON TRAINING DAR ###########################
 ###############################################################################
 
-train <- read.csv("baseline_predictions_dar/out-domain.csv")
-test <- read.csv("baseline_predictions_dar/train.csv")
+train <- read.csv("baseline_predictions_dar/splitA/out-domain.csv")
+test <- read.csv("baseline_predictions_dar/splitA/train.csv")
 
 tariff2 <- codeVA(data = test, data.type = "PHMRC", model = "Tariff",
                   data.train = train, causes.train = "gs_text34",
@@ -35,17 +35,17 @@ cod.interva2 <- getTopCOD(interva2)
 cod.nbc2 <- getTopCOD(nbc2)
 cod.insilico2 <- getTopCOD(insilico2)
 
-write.table(cod.tariff2,"baseline_predictions_dar/training_dar/tariff2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
-write.table(cod.interva2,"baseline_predictions_dar/training_dar/interva2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
-write.table(cod.nbc2,"baseline_predictions_dar/training_dar/nbc2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
-write.table(cod.insilico2,"baseline_predictions_dar/training_dar/insilico2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.tariff2,"baseline_predictions_dar/splitA/training_dar/tariff2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.interva2,"baseline_predictions_dar/splitA/training_dar/interva2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.nbc2,"baseline_predictions_dar/splitA/training_dar/nbc2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.insilico2,"baseline_predictions_dar/splitA/training_dar/insilico2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
 
 ###############################################################################
 ######################## EVALUATING ON TRAINING DAR ###########################
 ###############################################################################
 
-train <- read.csv("baseline_predictions_dar/out-domain.csv")
-test <- read.csv("baseline_predictions_dar/test.csv")
+train <- read.csv("baseline_predictions_dar/splitA/out-domain.csv")
+test <- read.csv("baseline_predictions_dar/splitA/test.csv")
 
 tariff2 <- codeVA(data = test, data.type = "PHMRC", model = "Tariff",
                   data.train = train, causes.train = "gs_text34",
@@ -67,7 +67,7 @@ cod.interva2 <- getTopCOD(interva2)
 cod.nbc2 <- getTopCOD(nbc2)
 cod.insilico2 <- getTopCOD(insilico2)
 
-write.table(cod.tariff2,"baseline_predictions_dar/testing_dar/tariff2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
-write.table(cod.interva2,"baseline_predictions_dar/testing_dar/interva2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
-write.table(cod.nbc2,"baseline_predictions_dar/testing_dar/nbc2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
-write.table(cod.insilico2,"baseline_predictions_dar/testing_dar/insilico2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.tariff2,"baseline_predictions_dar/splitA/testing_dar/tariff2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.interva2,"baseline_predictions_dar/splitA/testing_dar/interva2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.nbc2,"baseline_predictions_dar/splitA/testing_dar/nbc2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.insilico2,"baseline_predictions_dar/splitA/testing_dar/insilico2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
