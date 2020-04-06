@@ -13,8 +13,8 @@ library('nbc4va')
 ###############################################################################
 
 
-train <- read.csv("augmented_dataset/split_1/train.csv")
-test <- read.csv("augmented_dataset/split_1/test.csv")
+train <- read.csv("augmented_dataset/splitA/split_1/train.csv")
+test <- read.csv("augmented_dataset/splitA/split_1/test.csv")
 tariff2 <- codeVA(data = test, data.type = "PHMRC", model = "Tariff",
                   data.train = train, causes.train = "gs_text34",
                   phmrc.type = "adult")
@@ -35,10 +35,10 @@ cod.interva2 <- getTopCOD(interva2)
 cod.nbc2 <- getTopCOD(nbc2)
 cod.insilico2 <- getTopCOD(insilico2)
 
-write.table(cod.tariff2,"augmented_dataset/split_1/tariff2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
-write.table(cod.interva2,"augmented_dataset/split_1/interva2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
-write.table(cod.nbc2,"augmented_dataset/split_1/nbc2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
-write.table(cod.insilico2,"augmented_dataset/split_1/insilico2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.tariff2,"augmented_dataset/splitA/split_1/tariff2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.interva2,"augmented_dataset/splitA/split_1/interva2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.nbc2,"augmented_dataset/splitA/split_1/nbc2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.insilico2,"augmented_dataset/splitA/split_1/insilico2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
 
 
 
@@ -48,8 +48,8 @@ write.table(cod.insilico2,"augmented_dataset/split_1/insilico2.txt",sep="\t", ro
 ###############################################################################
 
 
-train <- read.csv("augmented_dataset/split_2/train.csv")
-test <- read.csv("augmented_dataset/split_2/test.csv")
+train <- read.csv("augmented_dataset/splitA/split_2/train.csv")
+test <- read.csv("augmented_dataset/splitA/split_2/test.csv")
 tariff2 <- codeVA(data = test, data.type = "PHMRC", model = "Tariff",
                   data.train = train, causes.train = "gs_text34",
                   phmrc.type = "adult")
@@ -70,10 +70,10 @@ cod.interva2 <- getTopCOD(interva2)
 cod.nbc2 <- getTopCOD(nbc2)
 cod.insilico2 <- getTopCOD(insilico2)
 
-write.table(cod.tariff2,"augmented_dataset/split_2/tariff2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
-write.table(cod.interva2,"augmented_dataset/split_2/interva2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
-write.table(cod.nbc2,"augmented_dataset/split_2/nbc2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
-write.table(cod.insilico2,"augmented_dataset/split_2/insilico2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.tariff2,"augmented_dataset/splitA/split_2/tariff2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.interva2,"augmented_dataset/splitA/split_2/interva2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.nbc2,"augmented_dataset/splitA/split_2/nbc2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.insilico2,"augmented_dataset/splitA/split_2/insilico2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
 
 
 
@@ -83,8 +83,8 @@ write.table(cod.insilico2,"augmented_dataset/split_2/insilico2.txt",sep="\t", ro
 ###############################################################################
 
 
-train <- read.csv("augmented_dataset/split_3/train.csv")
-test <- read.csv("augmented_dataset/split_3/test.csv")
+train <- read.csv("augmented_dataset/splitA/split_3/train.csv")
+test <- read.csv("augmented_dataset/splitA/split_3/test.csv")
 tariff2 <- codeVA(data = test, data.type = "PHMRC", model = "Tariff",
                   data.train = train, causes.train = "gs_text34",
                   phmrc.type = "adult")
@@ -105,7 +105,7 @@ cod.interva2 <- getTopCOD(interva2)
 cod.nbc2 <- getTopCOD(nbc2)
 cod.insilico2 <- getTopCOD(insilico2)
 
-write.table(cod.tariff2,"augmented_dataset/split_3/tariff2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
-write.table(cod.interva2,"augmented_dataset/split_3/interva2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
-write.table(cod.nbc2,"augmented_dataset/split_3/nbc2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
-write.table(cod.insilico2,"augmented_dataset/split_3/insilico2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.tariff2,"augmented_dataset/splitA/split_3/tariff2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.interva2,"augmented_dataset/splitA/split_3/interva2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.nbc2,"augmented_dataset/splitA/split_3/nbc2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.insilico2,"augmented_dataset/splitA/split_3/insilico2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
