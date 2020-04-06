@@ -2,7 +2,7 @@ import os
 import json
 import pandas as pd
 
-metrics_dir = "model_logs/clf/baselines_as_text_0"
+metrics_dir = "model_logs/clf/attn_ensemble_relu_weight_sum_0"
 
 classes = ["Cancer", "Other NCD", "Diabetes", "Renal", "Stroke", "Liver",
            "Cardio", "Other Comm", "Pneumonia", "TB/AIDS", "Maternal", "External"]

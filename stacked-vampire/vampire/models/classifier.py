@@ -57,9 +57,11 @@ class Classifier(Model):
                                                      self._num_labels)
         self._covariate_projection = torch.nn.Linear(self._num_labels, self._clf_input_dim)
         self.relu = torch.nn.ReLU()
+        # self.relu2 = torch.nn.ReLU()
 
-
-        self._covar_lambda = torch.nn.Linear(self._num_labels, self._num_labels)
+        self._covar_weights = torch.nn.Parameter(torch.randn(1, self._num_labels))
+        # self._covar_lambda = torch.nn.Linear(self._num_labels, self._num_labels)
+        # self._covar_lambda_two = torch.nn.Linear(self._num_labels, self._num_labels)
 
         self._accuracy = CategoricalAccuracy()
         self.label_f1_metrics = {}
@@ -123,9 +125,14 @@ class Classifier(Model):
         # the idea is to employ a simple attention mechanism here to weight
         # how much of the baseline we use vs. the predictions from vampire
         # logits = vampire_logits + \lambda * covariates
-        baseline_logits = self._covar_lambda(torch.sum(covariates, dim=1))
-        baseline_logits = self.relu(baseline_logits)
-        logits = vampire_logits + baseline_logits
+        # import pdb; pdb.set_trace()
+        # baseline_logits = self._covar_lambda(torch.sum(covariates, dim=1))
+        # baseline_logits = self.relu(baseline_logits)
+        #
+        # vampire_logits = self._covar_lambda_two(vampire_logits)
+        # vampire_logits = self.relu2(vampire_logits)
+        baseline_logits = torch.sum(covariates, dim=1).unsqueeze(dim=1) * self._covar_weights
+        logits = vampire_logits + self.relu(baseline_logits.squeeze(dim=1))
 
         probs = torch.nn.functional.softmax(logits, dim=-1)
 
