@@ -20,7 +20,7 @@ with open(metadata_file) as f:
     for line in f:
         metadata.append(line.strip())
 
-output_dir = 'vampire_jsonl'
+output_dir = 'vampire_jsonl/splitA'
 if not os.path.isdir(output_dir):
     os.mkdir(output_dir)
 
@@ -44,13 +44,13 @@ splits = ['split_1', 'split_2', 'split_3']
 
 for split in splits:
     # read the baseline predictions from the output files
-    tariff = read_baseline('augmented_dataset/' + split + '/tariff2.txt')
-    interva = read_baseline('augmented_dataset/' + split + '/interva2.txt')
-    nbc = read_baseline('augmented_dataset/' + split + '/nbc2.txt')
-    insilico = read_baseline('augmented_dataset/' + split + '/insilico2.txt')
+    tariff = read_baseline('augmented_dataset/splitA/' + split + '/tariff2.txt')
+    interva = read_baseline('augmented_dataset/splitA/' + split + '/interva2.txt')
+    nbc = read_baseline('augmented_dataset/splitA/' + split + '/nbc2.txt')
+    insilico = read_baseline('augmented_dataset/splitA/' + split + '/insilico2.txt')
 
     # read the csv representing the portion of the dataset we have predictions for
-    df = pd.read_csv('augmented_dataset/' + split + '/test.csv')
+    df = pd.read_csv('augmented_dataset/splitA/' + split + '/test.csv')
 
     # specify the excluded columns and bow columns
     bow_columns = df.filter(regex="word_*").columns
@@ -109,13 +109,13 @@ print("Generating train.jsonl....")
 train_jsonl = open(output_dir + "/train.jsonl", "w", encoding='utf-8')
 
 # gather the predictions from the appropriate location
-tariff = read_baseline('baseline_predictions_dar/training_dar/tariff2.txt')
-interva = read_baseline('baseline_predictions_dar/training_dar/interva2.txt')
-nbc = read_baseline('baseline_predictions_dar/training_dar/nbc2.txt')
-insilico = read_baseline('baseline_predictions_dar/training_dar/insilico2.txt')
+tariff = read_baseline('baseline_predictions_dar/splitA/training_dar/tariff2.txt')
+interva = read_baseline('baseline_predictions_dar/splitA/training_dar/interva2.txt')
+nbc = read_baseline('baseline_predictions_dar/splitA/training_dar/nbc2.txt')
+insilico = read_baseline('baseline_predictions_dar/splitA/training_dar/insilico2.txt')
 
 # open the csv that has the original data corresponding to the predictions
-df = pd.read_csv('baseline_predictions_dar/train.csv')
+df = pd.read_csv('baseline_predictions_dar/splitA/train.csv')
 
 assert len(df) == len(tariff)
 assert len(df) == len(interva)
@@ -179,13 +179,13 @@ print("Generating test.jsonl....")
 test_jsonl = open(output_dir + "/test.jsonl", "w", encoding='utf-8')
 
 # gather the predictions from the appropriate location
-tariff = read_baseline('baseline_predictions_dar/testing_dar/tariff2.txt')
-interva = read_baseline('baseline_predictions_dar/testing_dar/interva2.txt')
-nbc = read_baseline('baseline_predictions_dar/testing_dar/nbc2.txt')
-insilico = read_baseline('baseline_predictions_dar/testing_dar/insilico2.txt')
+tariff = read_baseline('baseline_predictions_dar/splitA/testing_dar/tariff2.txt')
+interva = read_baseline('baseline_predictions_dar/splitA/testing_dar/interva2.txt')
+nbc = read_baseline('baseline_predictions_dar/splitA/testing_dar/nbc2.txt')
+insilico = read_baseline('baseline_predictions_dar/splitA/testing_dar/insilico2.txt')
 
 # open the csv that has the original data corresponding to the predictions
-df = pd.read_csv('baseline_predictions_dar/test.csv')
+df = pd.read_csv('baseline_predictions_dar/splitA/test.csv')
 
 assert len(df) == len(tariff)
 assert len(df) == len(interva)
