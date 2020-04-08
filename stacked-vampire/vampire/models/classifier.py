@@ -55,11 +55,11 @@ class Classifier(Model):
             self._clf_input_dim = self._input_embedder.get_output_dim()
         self._classification_layer = torch.nn.Linear(self._clf_input_dim,
                                                      self._num_labels)
-        self._covariate_projection = torch.nn.Linear(self._num_labels, self._clf_input_dim)
-        self.relu = torch.nn.ReLU()
+        # self._covariate_projection = torch.nn.Linear(self._num_labels, self._clf_input_dim)
+        # self.relu = torch.nn.ReLU()
         # self.relu2 = torch.nn.ReLU()
 
-        self._covar_weights = torch.nn.Parameter(torch.randn(1, self._num_labels))
+        # self._covar_weights = torch.nn.Parameter(torch.randn(1, self._num_labels))
         # self._covar_lambda = torch.nn.Linear(self._num_labels, self._num_labels)
         # self._covar_lambda_two = torch.nn.Linear(self._num_labels, self._num_labels)
 
@@ -114,7 +114,11 @@ class Classifier(Model):
         # input = torch.cat((embedded_text, proj), dim=1)
         # let's just concat them all and see how the clf layer takes it
         # we can also experiment with averaging them and adding in non-linearities
-        vampire_logits = self._classification_layer(embedded_text)
+        logits = self._classification_layer(embedded_text)
+
+        logits = logits + torch.sum(covariates, dim=1)
+
+
 
         # include a projection of the covariates to the logits
         # projected_covariates = self._covariate_projection(covariates.transpose(1, 2))
@@ -131,8 +135,9 @@ class Classifier(Model):
         #
         # vampire_logits = self._covar_lambda_two(vampire_logits)
         # vampire_logits = self.relu2(vampire_logits)
-        baseline_logits = torch.sum(covariates, dim=1).unsqueeze(dim=1) * self._covar_weights
-        logits = vampire_logits + self.relu(baseline_logits.squeeze(dim=1))
+        # baseline_logits = torch.sum(covariates, dim=1).unsqueeze(dim=1) * self._covar_weights
+        # logits = vampire_logits + self.relu(baseline_logits.squeeze(dim=1))
+        # logits = vampire_logits + baseline_logits
 
         probs = torch.nn.functional.softmax(logits, dim=-1)
 
