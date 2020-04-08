@@ -55,13 +55,9 @@ class Classifier(Model):
             self._clf_input_dim = self._input_embedder.get_output_dim()
         self._classification_layer = torch.nn.Linear(self._clf_input_dim,
                                                      self._num_labels)
-        # self._covariate_projection = torch.nn.Linear(self._num_labels, self._clf_input_dim)
         # self.relu = torch.nn.ReLU()
-        # self.relu2 = torch.nn.ReLU()
 
-        # self._covar_weights = torch.nn.Parameter(torch.randn(1, self._num_labels))
-        # self._covar_lambda = torch.nn.Linear(self._num_labels, self._num_labels)
-        # self._covar_lambda_two = torch.nn.Linear(self._num_labels, self._num_labels)
+        self.attn = torch.nn.Parameter(torch.randn(5, self._num_labels))
 
         self._accuracy = CategoricalAccuracy()
         self.label_f1_metrics = {}
@@ -106,38 +102,14 @@ class Classifier(Model):
 
         if self._dropout:
             embedded_text = self._dropout(embedded_text)
-        # import pdb; pdb.set_trace()
-        # proj = self._covariate_projection(covariates)
-        # proj = torch.reshape(proj, (proj.shape[0], proj.shape[1] * proj.shape[2]))
-        # proj = torch.sum(proj, 1)
-        # proj = self.relu(proj)
-        # input = torch.cat((embedded_text, proj), dim=1)
-        # let's just concat them all and see how the clf layer takes it
-        # we can also experiment with averaging them and adding in non-linearities
-        logits = self._classification_layer(embedded_text)
 
-        logits = logits + torch.sum(covariates, dim=1)
-
-
-
-        # include a projection of the covariates to the logits
-        # projected_covariates = self._covariate_projection(covariates.transpose(1, 2))
-        # projected_covariates = self.relu(projected_covariates)
-        # logits = logits + projected_covariates.squeeze(dim=2)
+        vampire_logits = self._classification_layer(embedded_text)
+        vampire_logits = vampire_logits.unsqueeze(dim=1)
+        all_preds = torch.cat((covariates, vampire_logits), dim=1)
         # import pdb; pdb.set_trace()
 
-        # the idea is to employ a simple attention mechanism here to weight
-        # how much of the baseline we use vs. the predictions from vampire
-        # logits = vampire_logits + \lambda * covariates
-        # import pdb; pdb.set_trace()
-        # baseline_logits = self._covar_lambda(torch.sum(covariates, dim=1))
-        # baseline_logits = self.relu(baseline_logits)
-        #
-        # vampire_logits = self._covar_lambda_two(vampire_logits)
-        # vampire_logits = self.relu2(vampire_logits)
-        # baseline_logits = torch.sum(covariates, dim=1).unsqueeze(dim=1) * self._covar_weights
-        # logits = vampire_logits + self.relu(baseline_logits.squeeze(dim=1))
-        # logits = vampire_logits + baseline_logits
+        attention_preds = self.attn * all_preds
+        logits = torch.sum(attention_preds, dim=1)
 
         probs = torch.nn.functional.softmax(logits, dim=-1)
 
