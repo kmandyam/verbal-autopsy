@@ -1,6 +1,7 @@
 from typing import Dict
 
 import torch
+import torch.nn.functional as F
 from allennlp.data import Vocabulary
 from allennlp.models.model import Model
 from allennlp.modules import TextFieldEmbedder
@@ -10,6 +11,17 @@ from allennlp.training.metrics import CategoricalAccuracy, F1Measure
 
 from vampire.modules.encoder import Encoder
 
+
+class Attention(torch.nn.Module):
+    def __init__(self, temperature):
+        super().__init__()
+        self.temperature = temperature
+
+    def forward(self, query, key, value):
+        attn = torch.matmul(query / self.temperature, key.transpose(-2, -1))
+        attn = F.softmax(attn, dim=-1)
+        output = torch.matmul(attn, value)
+        return output, attn
 
 @Model.register("classifier")
 class Classifier(Model):
@@ -58,6 +70,9 @@ class Classifier(Model):
         # self.relu = torch.nn.ReLU()
 
         self.attn = torch.nn.Parameter(torch.randn(5, self._num_labels))
+
+        self._attn = Attention(1)
+        self._linear_layer = torch.nn.Linear(self._num_labels, self._num_labels, bias=False)
 
         self._accuracy = CategoricalAccuracy()
         self.label_f1_metrics = {}
@@ -108,7 +123,13 @@ class Classifier(Model):
         all_preds = torch.cat((covariates, vampire_logits), dim=1)
         # import pdb; pdb.set_trace()
 
+        # logits = self._linear_layer(all_preds)
+        # attn_output, attn = self._attn(logits, logits, logits)
+
+        # logits = torch.sum(attn_output, dim=1)
+
         attention_preds = self.attn * all_preds
+
         logits = torch.sum(attention_preds, dim=1)
 
         probs = torch.nn.functional.softmax(logits, dim=-1)
