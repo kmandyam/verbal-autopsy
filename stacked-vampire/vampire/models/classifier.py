@@ -12,17 +12,6 @@ from allennlp.training.metrics import CategoricalAccuracy, F1Measure
 from vampire.modules.encoder import Encoder
 
 
-class Attention(torch.nn.Module):
-    def __init__(self, temperature):
-        super().__init__()
-        self.temperature = temperature
-
-    def forward(self, query, key, value):
-        attn = torch.matmul(query / self.temperature, key.transpose(-2, -1))
-        attn = F.softmax(attn, dim=-1)
-        output = torch.matmul(attn, value)
-        return output, attn
-
 @Model.register("classifier")
 class Classifier(Model):
     """
@@ -67,12 +56,8 @@ class Classifier(Model):
             self._clf_input_dim = self._input_embedder.get_output_dim()
         self._classification_layer = torch.nn.Linear(self._clf_input_dim,
                                                      self._num_labels)
-        # self.relu = torch.nn.ReLU()
 
         self.attn = torch.nn.Parameter(torch.randn(5, self._num_labels))
-
-        self._attn = Attention(1)
-        self._linear_layer = torch.nn.Linear(self._num_labels, self._num_labels, bias=False)
 
         self._accuracy = CategoricalAccuracy()
         self.label_f1_metrics = {}
@@ -122,12 +107,6 @@ class Classifier(Model):
         vampire_logits = vampire_logits.unsqueeze(dim=1)
         all_preds = torch.cat((covariates, vampire_logits), dim=1)
         # import pdb; pdb.set_trace()
-
-        # logits = self._linear_layer(all_preds)
-        # attn_output, attn = self._attn(logits, logits, logits)
-
-        # logits = torch.sum(attn_output, dim=1)
-
         attention_preds = self.attn * all_preds
 
         logits = torch.sum(attention_preds, dim=1)
@@ -135,6 +114,9 @@ class Classifier(Model):
         probs = torch.nn.functional.softmax(logits, dim=-1)
 
         output_dict = {"logits": logits, "probs": probs}
+
+        if not self.training and 8 in label:
+            import pdb; pdb.set_trace()
 
         if label is not None:
             loss = self._loss(logits, label.long().view(-1))
