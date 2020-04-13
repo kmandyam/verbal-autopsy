@@ -1,5 +1,3 @@
 stacked-vampire/examples/*
 stacked-vampire/model_logs/*
-baseline_predictions_dar/*
 .DS_Store
-vampire_jsonl/*
