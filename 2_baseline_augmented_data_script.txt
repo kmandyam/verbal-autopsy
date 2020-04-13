@@ -4,7 +4,7 @@ library(rJava)
 library(openVA)
 library('nbc4va')
 
-# for each split (1 - 3), we need to train each baseline on the appropriate training data
+# for each split (1 - 5), we need to train each baseline on the appropriate training data
 # and evaluate on the appropriate test split
 
 
@@ -109,3 +109,69 @@ write.table(cod.tariff2,"augmented_dataset/splitA/split_3/tariff2.txt",sep="\t",
 write.table(cod.interva2,"augmented_dataset/splitA/split_3/interva2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
 write.table(cod.nbc2,"augmented_dataset/splitA/split_3/nbc2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
 write.table(cod.insilico2,"augmented_dataset/splitA/split_3/insilico2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+
+
+###############################################################################
+############################### SPLIT 4 #######################################
+###############################################################################
+
+
+train <- read.csv("augmented_dataset/splitA/split_4/train.csv")
+test <- read.csv("augmented_dataset/splitA/split_4/test.csv")
+tariff2 <- codeVA(data = test, data.type = "PHMRC", model = "Tariff",
+                  data.train = train, causes.train = "gs_text34",
+                  phmrc.type = "adult")
+interva2 <- codeVA(data = test, data.type = "PHMRC", model = "InterVA",
+                   data.train = train, causes.train = "gs_text34",
+                   phmrc.type = "adult")
+nbc2 <- codeVA(data = test, data.type = "PHMRC", model = "NBC",
+                   data.train = train, causes.train = "gs_text34",
+                   phmrc.type = "adult")
+insilico2 <- codeVA(data = test, data.type = "PHMRC", model = "InSilicoVA",
+                    data.train = train, causes.train = "gs_text34",
+                    phmrc.type = "adult",
+                    jump.scale = 0.05, convert.type = "fixed",
+                    Nsim=10000, auto.length = FALSE)
+
+cod.tariff2 <- getTopCOD(tariff2)
+cod.interva2 <- getTopCOD(interva2)
+cod.nbc2 <- getTopCOD(nbc2)
+cod.insilico2 <- getTopCOD(insilico2)
+
+write.table(cod.tariff2,"augmented_dataset/splitA/split_4/tariff2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.interva2,"augmented_dataset/splitA/split_4/interva2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.nbc2,"augmented_dataset/splitA/split_4/nbc2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.insilico2,"augmented_dataset/splitA/split_4/insilico2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+
+
+###############################################################################
+############################### SPLIT 5 #######################################
+###############################################################################
+
+
+train <- read.csv("augmented_dataset/splitA/split_5/train.csv")
+test <- read.csv("augmented_dataset/splitA/split_5/test.csv")
+tariff2 <- codeVA(data = test, data.type = "PHMRC", model = "Tariff",
+                  data.train = train, causes.train = "gs_text34",
+                  phmrc.type = "adult")
+interva2 <- codeVA(data = test, data.type = "PHMRC", model = "InterVA",
+                   data.train = train, causes.train = "gs_text34",
+                   phmrc.type = "adult")
+nbc2 <- codeVA(data = test, data.type = "PHMRC", model = "NBC",
+                   data.train = train, causes.train = "gs_text34",
+                   phmrc.type = "adult")
+insilico2 <- codeVA(data = test, data.type = "PHMRC", model = "InSilicoVA",
+                    data.train = train, causes.train = "gs_text34",
+                    phmrc.type = "adult",
+                    jump.scale = 0.05, convert.type = "fixed",
+                    Nsim=10000, auto.length = FALSE)
+
+cod.tariff2 <- getTopCOD(tariff2)
+cod.interva2 <- getTopCOD(interva2)
+cod.nbc2 <- getTopCOD(nbc2)
+cod.insilico2 <- getTopCOD(insilico2)
+
+write.table(cod.tariff2,"augmented_dataset/splitA/split_5/tariff2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.interva2,"augmented_dataset/splitA/split_5/interva2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.nbc2,"augmented_dataset/splitA/split_5/nbc2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(cod.insilico2,"augmented_dataset/splitA/split_5/insilico2.txt",sep="\t", row.names=FALSE, col.names=FALSE)
