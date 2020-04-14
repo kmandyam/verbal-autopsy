@@ -40,7 +40,7 @@ Generating out-domain.jsonl
 '''
 print("Generating out-domain.jsonl....")
 out_domain_jsonl = open(output_dir + "/out-domain.jsonl", "w", encoding='utf-8')
-splits = ['split_1', 'split_2', 'split_3', 'split_4', 'split_5']
+splits = ['split_1', 'split_2', 'split_3', 'split_4', 'split_5', 'split_6', 'split_7', 'split_8', 'split_9', 'split_10']
 
 for split in splits:
     # read the baseline predictions from the output files
